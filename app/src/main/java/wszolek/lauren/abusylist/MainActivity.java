@@ -47,21 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     // long clicking on a list item will remove the todo from the list AND from the db
     private void setupListViewListeners(){
-        lvTodoItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                                                   @Override
-                                                   public boolean onItemLongClick(AdapterView<?> adapterView, View item, int pos, long id) {
-                                                    //   TodoItem tdi = arrayOfTodos.get(pos);
-                                                       cupboard().withDatabase(db).delete(TodoItem.class, id);
-                                                       arrayOfTodos.remove(pos);
-                                                       tdAdapter.notifyDataSetChanged();
 
-                                                       return false;
 
-                                                   }
-            }
-        );
-
-        lvTodoItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        lvTodoItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View item, int pos, long id) {
                 launchEditView(pos, id);
@@ -74,23 +62,28 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, EditTodoActivity.class);
         TodoItem tdi = arrayOfTodos.get(pos);
         i.putExtra("todoToEdit", tdi);
-        i.putExtra("arPos", pos);
+        i.putExtra("tdiPos", pos);
         startActivityForResult(i, REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String tdiAction = data.getExtras().getString("action");
+        int tdiPos = (int) data.getExtras().getInt("tdiPos");
 
         if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
-         //   Toast.makeText(this, "foo", Toast.LENGTH_SHORT).show();
-            //        Toast.makeText(this, tdi.priority, Toast.LENGTH_SHORT).show();
-            TodoItem tdi = (TodoItem) data.getParcelableExtra("editedTodo");
-            Integer tdiPos = (Integer) data.getExtras().getInt("arPos");
-        //    Toast.makeText(this, String.valueOf(tdiPos), Toast.LENGTH_SHORT).show();
-            writeTodo(tdi);
-            cupboard().withDatabase(db).put(tdi);
-            arrayOfTodos.set(tdiPos, tdi);
+            if(tdiAction.equals("edit")) {
+                TodoItem tdi = (TodoItem) data.getParcelableExtra("editedTodo");
+                writeTodo(tdi);
+                cupboard().withDatabase(db).put(tdi);
+                arrayOfTodos.set(tdiPos, tdi);
+            }
+            if (tdiAction.equals("delete")){
+                Long tdiId = (Long) data.getExtras().getLong("tdiId");
+                cupboard().withDatabase(db).delete(TodoItem.class, tdiId);
+                arrayOfTodos.remove(tdiPos);
+            }
             tdAdapter.notifyDataSetChanged();
         }
     }
@@ -153,7 +146,5 @@ public class MainActivity extends AppCompatActivity {
     private void writeTodo(TodoItem tdi) {
         long id = cupboard().withDatabase(db).put(tdi);
     }
-
-
 
 }

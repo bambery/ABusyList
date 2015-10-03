@@ -45,9 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/delete_todo"
-        android:id="@+id/button"
+        android:id="@+id/btnDeleteTodo"
         android:layout_alignTop="@+id/btnSubmitEdit"
         android:layout_alignRight="@+id/etEditTodoTitle"
-        android:layout_alignEnd="@+id/etEditTodoTitle"/>
+        android:layout_alignEnd="@+id/etEditTodoTitle"
+        android:onClick="onDeleteTodo"/>
 
 </RelativeLayout>

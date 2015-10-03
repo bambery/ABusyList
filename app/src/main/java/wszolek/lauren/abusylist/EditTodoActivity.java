@@ -19,7 +19,7 @@ public class EditTodoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_todo);
         // get the old value of the tdi and display
         tdi= getIntent().getParcelableExtra("todoToEdit");
-        tdiPos = getIntent().getExtras().getInt("arPos");
+        tdiPos = getIntent().getExtras().getInt("tdiPos");
      //   Toast.makeText(this, String.valueOf(tdiPos), Toast.LENGTH_SHORT).show();
         etEditTodoTitle = (EditText) findViewById(R.id.etEditTodoTitle);
         etEditTodoTitle.setText(tdi.title);
@@ -39,11 +39,20 @@ public class EditTodoActivity extends AppCompatActivity {
         tdi.title = changedItemTitle;
         Intent i = new Intent();
         i.putExtra("editedTodo", tdi);
-        i.putExtra("arPos", tdiPos);
+        i.putExtra("tdiPos", tdiPos);
+        i.putExtra("action", "edit");
         setResult(RESULT_OK, i);
         finish();
     }
 
+    public void onDeleteTodo(View v){
+        Intent i = new Intent();
+        i.putExtra("action", "delete");
+        i.putExtra("tdiPos", tdiPos);
+        i.putExtra("tdiId", tdi._id);
+        setResult(RESULT_OK, i);
+        finish();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
