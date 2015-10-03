@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     ListView lvTodoItems;
     TodoDatabaseHelper dbHelper;
     static SQLiteDatabase db;
+    // for the intent
+    private final int REQUEST_CODE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,25 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, EditTodoActivity.class);
         TodoItem tdi = arrayOfTodos.get(pos);
         i.putExtra("todoToEdit", tdi);
-        startActivity(i);
+        i.putExtra("arPos", pos);
+        startActivityForResult(i, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+         //   Toast.makeText(this, "foo", Toast.LENGTH_SHORT).show();
+            //        Toast.makeText(this, tdi.priority, Toast.LENGTH_SHORT).show();
+            TodoItem tdi = (TodoItem) data.getParcelableExtra("editedTodo");
+            Integer tdiPos = (Integer) data.getExtras().getInt("arPos");
+        //    Toast.makeText(this, String.valueOf(tdiPos), Toast.LENGTH_SHORT).show();
+            writeTodo(tdi);
+            cupboard().withDatabase(db).put(tdi);
+            arrayOfTodos.set(tdiPos, tdi);
+            tdAdapter.notifyDataSetChanged();
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,30 +137,23 @@ public class MainActivity extends AppCompatActivity {
         etAddTodo.setText("");
     }
 
-
-//    private static List<TodoItem> getListFromQueryResultIterator(QueryResultIterable<TodoItem> iter) {
     public void getListFromQueryResultIterator(QueryResultIterable<TodoItem> iter) {
-    //    final List<TodoItem> todos = new ArrayList<TodoItem>();
         for (TodoItem todo_item : iter) {
             tdAdapter.add(todo_item);
         }
         iter.close();
-
-    //    return todos;
     }
 
-    //public ArrayList<TodoItem> getAllTodos() {
     public void getAllTodos() {
         final QueryResultIterable<TodoItem> iter = cupboard().withDatabase(db).query(TodoItem.class).query();
         getListFromQueryResultIterator(iter);
-    //    arrayOfTodos = (ArrayList<TodoItem>) getListFromQueryResultIterator(iter);
-    //    return arrayOfTodos;
     }
 
 
     private void writeTodo(TodoItem tdi) {
         long id = cupboard().withDatabase(db).put(tdi);
     }
+
 
 
 }

@@ -24,12 +24,13 @@ public class TodoItem implements Parcelable{
     }
 
     public TodoItem(Parcel in){
-        String[] data = new String[3];
+        String[] data = new String[4];
 
         in.readStringArray(data);
-        this.title = data[0];
+        this._id = Long.parseLong(data[0]);
+        this.title = data[1];
         this.priority = data[2];
-        this.completed = Boolean.parseBoolean(data[2]);
+        this.completed = Boolean.parseBoolean(data[3]);
     }
     @Override
     public int describeContents() {
@@ -39,7 +40,7 @@ public class TodoItem implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{this.title, this.priority, String.valueOf(this.completed)});
+        dest.writeStringArray(new String[]{String.valueOf(this._id), this.title, this.priority, String.valueOf(this.completed)});
     }
 
     public static final Parcelable.Creator<TodoItem> CREATOR= new Parcelable.Creator<TodoItem>() {

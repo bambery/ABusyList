@@ -1,20 +1,27 @@
 package wszolek.lauren.abusylist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 public class EditTodoActivity extends AppCompatActivity {
+    EditText etEditTodoTitle;
+    TodoItem tdi;
+    Integer tdiPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_todo);
         // get the old value of the tdi and display
-        TodoItem tdi= getIntent().getParcelableExtra("todoToEdit");
-        EditText etEditTodoTitle = (EditText) findViewById(R.id.etEditTodoTitle);
+        tdi= getIntent().getParcelableExtra("todoToEdit");
+        tdiPos = getIntent().getExtras().getInt("arPos");
+     //   Toast.makeText(this, String.valueOf(tdiPos), Toast.LENGTH_SHORT).show();
+        etEditTodoTitle = (EditText) findViewById(R.id.etEditTodoTitle);
         etEditTodoTitle.setText(tdi.title);
     }
 
@@ -24,6 +31,17 @@ public class EditTodoActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_edit_todo, menu);
 
         return true;
+    }
+
+    public void onSaveEdit(View v) {
+        EditText etEditTodoTitle = (EditText) findViewById(R.id.etEditTodoTitle);
+        String changedItemTitle = etEditTodoTitle.getText().toString();
+        tdi.title = changedItemTitle;
+        Intent i = new Intent();
+        i.putExtra("editedTodo", tdi);
+        i.putExtra("arPos", tdiPos);
+        setResult(RESULT_OK, i);
+        finish();
     }
 
     @Override
