@@ -27,12 +27,12 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
         TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
         TextView tvPriority = (TextView) convertView.findViewById(R.id.tvPriority);
         final CheckBox cbCompleted = (CheckBox) convertView.findViewById(R.id.cbCompleted);
-        cbCompleted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                todoItem.completed = cbCompleted.isChecked();
-            }
-        });
+//        cbCompleted.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                todoItem.completed = cbCompleted.isChecked();
+//            }
+//        });
         //populate data into the template view using the data object
         tvTitle.setText(todoItem.title);
         tvPriority.setText(todoItem.priority);
