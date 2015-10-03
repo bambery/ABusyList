@@ -17,6 +17,7 @@ public class TodoItem implements Parcelable{
         this.completed = false;
     }
 
+    // TODO: getters & setters? Read up on the patterns
     public TodoItem(String title, String priority) {
         this.title = title;
         this.priority = priority;
@@ -54,4 +55,5 @@ public class TodoItem implements Parcelable{
             return new TodoItem[size];
         }
     };
+
 }

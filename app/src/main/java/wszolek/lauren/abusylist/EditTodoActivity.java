@@ -20,7 +20,6 @@ public class EditTodoActivity extends AppCompatActivity {
         // get the old value of the tdi and display
         tdi= getIntent().getParcelableExtra("todoToEdit");
         tdiPos = getIntent().getExtras().getInt("tdiPos");
-     //   Toast.makeText(this, String.valueOf(tdiPos), Toast.LENGTH_SHORT).show();
         etEditTodoTitle = (EditText) findViewById(R.id.etEditTodoTitle);
         etEditTodoTitle.setText(tdi.title);
     }

@@ -27,6 +27,7 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
         TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
         TextView tvPriority = (TextView) convertView.findViewById(R.id.tvPriority);
         final CheckBox cbCompleted = (CheckBox) convertView.findViewById(R.id.cbCompleted);
+//      TODO: make these checkboxes work! You were so close
 //        cbCompleted.setVisibility(View.GONE);
 //        cbCompleted.setOnClickListener(new View.OnClickListener() {
 //            @Override

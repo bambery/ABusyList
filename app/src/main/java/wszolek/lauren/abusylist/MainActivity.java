@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ListView lvTodoItems;
     TodoDatabaseHelper dbHelper;
     static SQLiteDatabase db;
-    // for the intent
+    //TODO why not use the code to determine the action needed?
     private final int REQUEST_CODE = 20;
 
     @Override
@@ -113,11 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
         //attach the adapter to a ListView
         lvTodoItems.setAdapter(tdAdapter);
-     //   TodoItem todo1 = new TodoItem("Buy milk", "medium");
-     //   TodoItem todo2 = new TodoItem("do stuff", "low");
-     //   arrayOfTodos.add(todo1);
-     //   arrayOfTodos.add(todo2);
-     //   arrayOfTodos = getAllTodos();
         getAllTodos();
     }
 
@@ -142,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         getListFromQueryResultIterator(iter);
     }
 
-
+    // TODO get all of the db actions into helpers
     private void writeTodo(TodoItem tdi) {
         long id = cupboard().withDatabase(db).put(tdi);
     }
