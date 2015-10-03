@@ -1,5 +1,6 @@
 package wszolek.lauren.abusylist;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         //create the adapter to convert the list to views
         tdAdapter = new TodoItemAdapter(this, arrayOfTodos);
         //listener for long clicks
-        setupListViewListener();
+        setupListViewListeners();
         //set up db and database helper
         dbHelper = new TodoDatabaseHelper(this);
         dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 1, 2);
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // long clicking on a list item will remove the todo from the list AND from the db
-    private void setupListViewListener(){
+    private void setupListViewListeners(){
         lvTodoItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                                    @Override
                                                    public boolean onItemLongClick(AdapterView<?> adapterView, View item, int pos, long id) {
@@ -57,8 +58,22 @@ public class MainActivity extends AppCompatActivity {
                                                    }
             }
         );
+
+        lvTodoItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View item, int pos, long id) {
+                launchEditView(pos, id);
+            }
+        });
     }
 
+    public void launchEditView(int pos, long id)
+    {
+        Intent i = new Intent(MainActivity.this, EditTodoActivity.class);
+        TodoItem tdi = arrayOfTodos.get(pos);
+        i.putExtra("todoToEdit", tdi);
+        startActivity(i);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
