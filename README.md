@@ -7,6 +7,8 @@ Submitted by: **Lauren Wszolek**
 
 Time spent: **3** hours building the first version following the tutorials, **10+** on the second
 
+(note: I have pushed the deletion of some files missed by an incomplete gitignore since submitting, but otherwise the master branch is unchanged)
+
 ## User Stories
 
 The following **required** functionality is completed:
