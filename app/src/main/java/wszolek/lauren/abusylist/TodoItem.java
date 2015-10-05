@@ -2,7 +2,6 @@ package wszolek.lauren.abusylist;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 //parceling taken from here: http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
 
 public class TodoItem implements Parcelable{
