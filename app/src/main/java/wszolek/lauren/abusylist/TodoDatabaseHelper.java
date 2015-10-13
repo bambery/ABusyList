@@ -36,4 +36,8 @@ public class TodoDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void writeTodo(SQLiteDatabase db, TodoItem tdi) {
+        long id = cupboard().withDatabase(db).put(tdi);
+    }
+
 }

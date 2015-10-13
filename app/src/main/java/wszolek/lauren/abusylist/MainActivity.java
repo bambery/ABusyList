@@ -30,16 +30,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lvTodoItems = (ListView) findViewById(R.id.lvTodoItems);
         //construct data source
         arrayOfTodos = new ArrayList<TodoItem>();
-        //create the adapter to convert the list to views
-        tdAdapter = new TodoItemAdapter(this, arrayOfTodos);
-        //listener for long clicks
-        setupListViewListeners();
+        lvTodoItems = (ListView) findViewById(R.id.lvTodoItems);
         //set up db and database helper
         dbHelper = new TodoDatabaseHelper(this);
         dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 1, 2);
+
+        //create the adapter to convert the list to views
+        tdAdapter = new TodoItemAdapter(this, arrayOfTodos);
+        setupListViewListeners();
+
         db = dbHelper.getWritableDatabase();
         populateTodoItemsList();
 
@@ -75,8 +76,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
             if(tdiAction.equals("edit")) {
                 TodoItem tdi = (TodoItem) data.getParcelableExtra("editedTodo");
-                writeTodo(tdi);
-                cupboard().withDatabase(db).put(tdi);
+                dbHelper.writeTodo(db, tdi);
+//                writeTodo(tdi);
+            // this looks like a duped line since writetodo already writes to db?
+            //    cupboard().withDatabase(db).put(tdi);
                 arrayOfTodos.set(tdiPos, tdi);
             }
             if (tdiAction.equals("delete")){
@@ -121,9 +124,18 @@ public class MainActivity extends AppCompatActivity {
         String itemTitle = etAddTodo.getText().toString();
         TodoItem newTodo = new TodoItem(itemTitle, "low");
         tdAdapter.add(newTodo);
-        writeTodo(newTodo);
+        dbHelper.writeTodo(db, newTodo);
+//        writeTodo(newTodo);
         etAddTodo.setText("");
     }
+
+//    public void onToggleCompleted(View v) {
+//        CheckBox cbCompleted = (CheckBox) findViewById(R.id.cbCompleted);
+//        cbCompleted.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onCli
+//    }
+//        );
 
     public void getListFromQueryResultIterator(QueryResultIterable<TodoItem> iter) {
         for (TodoItem todo_item : iter) {
@@ -135,11 +147,6 @@ public class MainActivity extends AppCompatActivity {
     public void getAllTodos() {
         final QueryResultIterable<TodoItem> iter = cupboard().withDatabase(db).query(TodoItem.class).query();
         getListFromQueryResultIterator(iter);
-    }
-
-    // TODO get all of the db actions into helpers
-    private void writeTodo(TodoItem tdi) {
-        long id = cupboard().withDatabase(db).put(tdi);
     }
 
 }
