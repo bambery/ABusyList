@@ -16,6 +16,12 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
     TodoDatabaseHelper dbHelper;
     static SQLiteDatabase db;
 
+    // view lookup cache
+    private static class ViewHolder {
+        CheckBox completed;
+        TextView name;
+        TextView priority;
+    }
     public TodoItemAdapter(Context context, ArrayList<TodoItem> todoItems) {
         super(context, 0, todoItems);
         dbHelper = new TodoDatabaseHelper(context);
@@ -28,29 +34,33 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
         //get data for list item for this position
         final TodoItem todoItem = getItem(position);
         //check if an existing view is being reused, otherwise inflate the view
+        final ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.item_todo, parent, false);
+            viewHolder.completed = (CheckBox) convertView.findViewById(R.id.cbCompleted);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.priority = (TextView) convertView.findViewById(R.id.tvPriority);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        //lookup view for data population
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        TextView tvPriority = (TextView) convertView.findViewById(R.id.tvPriority);
-        final CheckBox cbCompleted = (CheckBox) convertView.findViewById(R.id.cbCompleted);
 
         //set listener for checkbox
-        cbCompleted.setOnClickListener(new View.OnClickListener() {
+        viewHolder.completed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                todoItem.completed = cbCompleted.isChecked();
+                todoItem.completed = viewHolder.completed.isChecked();
                 todoItemList.set(position, todoItem);
                 dbHelper.writeTodo(db, todoItem);
             }
         });
         //populate data into the template view using the data object
-        tvTitle.setText(todoItem.title);
-        tvPriority.setText(todoItem.priority);
-        cbCompleted.setChecked(todoItem.completed);
+        viewHolder.name.setText(todoItem.title);
+        viewHolder.priority.setText(todoItem.priority);
+        viewHolder.completed.setChecked(todoItem.completed);
         return convertView;
     }
-
 }
